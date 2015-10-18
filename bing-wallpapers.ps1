@@ -84,12 +84,12 @@ if ($files -gt 0) {
 	Write-Host "Cleaning the directory..."
 	$i = 1
 	Get-ChildItem -Filter "????-??-??.jpg" $downloadFolder | Sort -Descending FullName | ForEach-Object {
-		$i++
 		if ($i -gt $files) {
 			# We have more files than we want, delete the extra files
 			$fileName = $_.FullName
 			Write-Debug "Removing file $fileName"
 			Remove-Item "$fileName"
 		}
+		$i++
 	}
 }
