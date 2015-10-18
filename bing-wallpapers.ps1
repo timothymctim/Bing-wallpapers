@@ -65,7 +65,6 @@ if (!($files -eq 0) -and ($itemMatches.Count -gt $files)) {
 }
 
 Write-Host "Downloading enclosures..."
-$wallpaperFiles = New-Object System.Collections.ArrayList
 foreach ($item in $itemMatches) {
 	$baseName = $item.Modified.ToString("yyyy-MM-dd")
 	$destination = "$downloadFolder\$baseName.jpg"
@@ -76,17 +75,17 @@ foreach ($item in $itemMatches) {
 		Write-Debug "Downloading enclosure to $destination"
 		$client.DownloadFile($url, "$destination")
 	}
-
-	# Keep track of the files we should have as wallpapers
-	$null = $wallpaperFiles.Add($destination)
 }
 
 if ($files -gt 0) {
 	# We do not want to keep every file; remove the old ones
 	Write-Host "Cleaning the directory..."
-	Get-ChildItem -Filter "????-??-??.jpg" $downloadFolder | ForEach-Object {
-		$fileName = $_.FullName
-		if (!($wallpaperFiles.Contains($fileName))) {
+	$i = 1
+	Get-ChildItem -Filter "????-??-??.jpg" $downloadFolder | Sort -Descending FullName | ForEach-Object {
+		$i++
+		if ($i -gt $files) {
+			# We have more files than we want, delete the extra files
+			$fileName = $_.FullName
 			Write-Debug "Removing file $fileName"
 			Remove-Item "$fileName"
 		}

@@ -62,6 +62,10 @@ First, make sure that you can actually run PowerShell scripts.
 You might have to set the execution policy to unrestricted by running
 `Set-ExecutionPolicy Unrestricted` in a PowerShell window executed with
 administrator rights.
+Additionally, you might need to unblock the file since you downloaded
+the file from an untrusted source on the Internet.
+You can do this by running `Unblock-File <path to the script>` as
+administrator.
 
 You can configure to run the script periodically using 'Task Scheduler'.
 Open Task Scheduler and click `Action` ⇨ `Create Task…`.
