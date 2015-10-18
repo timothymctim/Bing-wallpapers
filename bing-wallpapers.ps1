@@ -3,7 +3,7 @@
 # <https://github.com/timothymctim/Bing-wallpapers>
 #
 # Copyright (c) 2015 Tim van de Kamp
-# Licensed under the MIT license
+# License: MIT license
 Param(
 	# Get the Bing image of this country
 	# Possible values: "United States", "United Kingdom", "New Zealand", "Japan", "China", "Australia"
@@ -37,14 +37,14 @@ if ($fm.RootFolder.ExistsFeed($feedName)) {
 	$feed.DownloadEnclosuresAutomatically = $false
 }
 
-# Only update the feed if we haven't updated it in one day or the maxItemCount has increased
-if (($feed.LastDownloadTime.AddDays(1).CompareTo([System.DateTime]::Now) -le 0) -or ($feed.MaxItemCount -lt $maxItemCount)) {
+# Only update the feed if we haven't updated it in half a day or the maxItemCount has increased
+if (($feed.LastDownloadTime.AddHours(12).CompareTo([System.DateTime]::Now) -le 0) -or ($feed.MaxItemCount -lt $maxItemCount)) {
 	Write-Host "Updating feed..."
 	$feed.MaxItemCount = $maxItemCount
 	$feed.Download()
 }
 
-$client = New-Object System.Net.WebClient
+# Add the items we want to a list
 $itemMatches = New-Object System.Collections.ArrayList
 foreach ($item in $feed.Items) {
 	$title = $item.Title
@@ -55,6 +55,7 @@ foreach ($item in $feed.Items) {
 	}
 }
 
+# Keep only the most recent $files items in our list
 if (!($files -eq 0) -and ($itemMatches.Count -gt $files)) {
 	# We have too many matches, keep only the most recent
 	$itemMatches = $itemMatches|Sort PubDate
@@ -65,6 +66,7 @@ if (!($files -eq 0) -and ($itemMatches.Count -gt $files)) {
 }
 
 Write-Host "Downloading enclosures..."
+$client = New-Object System.Net.WebClient
 foreach ($item in $itemMatches) {
 	$baseName = $item.Modified.ToString("yyyy-MM-dd")
 	$destination = "$downloadFolder\$baseName.jpg"
