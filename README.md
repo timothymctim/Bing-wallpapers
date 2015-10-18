@@ -66,6 +66,7 @@ Additionally, you might need to unblock the file since you downloaded
 the file from an untrusted source on the Internet.
 You can do this by running `Unblock-File <path to the script>` as
 administrator.
+Note that the script itself doesn't need to be run as administrator!
 
 You can configure to run the script periodically using 'Task Scheduler'.
 Open Task Scheduler and click `Action` ⇨ `Create Task…`.
