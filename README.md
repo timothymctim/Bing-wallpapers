@@ -5,27 +5,25 @@ the day.
 Using this script you can set the Bing image of the day as your
 wallpaper.
 
-The script uses the RSS feed of
-[I started something](http://www.istartedsomething.com/bingimages/) to
-download the images.
-It adds the feed to the Internet Explorer feed reader.
-Together with a few extra steps, this script allows you to set your
-wallpaper to the Bing image of the day, just like using [Bing
+The script uses the XML page of [Microsoft Bing](https://www.bing.com/)
+to download the images.
+With a few extra steps, the script allows you to set your wallpaper to
+the Bing image of the day, just like using [Bing
 desktop](http://blogs.msdn.com/b/buckh/archive/2013/01/02/bing-desktop-set-your-background-to-the-bing-image-of-the-day.aspx)
-(which you might not want to install or is unavailable in your region).
+(which might be unavailable in your region or you do not want to
+install).
 
 Script options
 --------------
 The script supports several option which allows you to customize its
 behavior.
 
-* `-country`
-  Get the Bing image of the day for this country
+* `-locale` Get the Bing image of the day for this area.
 
-  **Possible values** `"United States"`, `"United Kingdom"`,
-  `"New Zealand"`, `"Japan"`, `"China"`, `"Australia"`
+  **Possible values** `'de-DE'`, `'en-AU'`, `'en-CA'`, `'en-NZ'`,
+  `'en-UK'`, `'en-US'`, `'ja-JP'`, `'zh-CN'`
 
-  **Default value** `"United States"`
+  **Default value** `'en-US'`
 
 * `-files` Keep only this number of images in the folder, *any other
   file matching* `????-??-??.jpg` *will be* **removed**!
@@ -35,7 +33,15 @@ behavior.
   **Remarks** Setting this option to `0` will keep all images and will
   not remove any file.
 
-* `-downloadFolder` Destination folder to download the wallpapers to
+* `-resolution` Determines which image resolution will be downloaded.
+  If set to `'auto'` the script will try to determine which resolution
+  is more appropriate based on your primary screen resolution.
+
+  **Possible values** `'auto'`, `1366x768'`, `'1920x1080'`
+
+  **Default value** `'auto'`
+
+* `-downloadFolder` Destination folder to download the wallpapers to.
 
   **Default value**
   `"$([Environment]::GetFolderPath("MyPictures"))\Wallpapers"`
@@ -43,13 +49,6 @@ behavior.
 
   **Remarks** The folder will automatically be created if it doesn't
   exists already.
-
-* `-feedName` The name of the Internet Explorer feed.
-
-  **Default value** `"Bing Images"`
-
-  **Remarks** The feed will automatically be created with this name if
-  it doesn't exists already.
 
 Set as your wallpaper
 =====================

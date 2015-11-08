@@ -1,95 +1,94 @@
 ﻿# Bing Wallpapers
-# Fetch the Bing wallpaper image of the day 
+# Fetch the Bing wallpaper image of the day
 # <https://github.com/timothymctim/Bing-wallpapers>
 #
 # Copyright (c) 2015 Tim van de Kamp
 # License: MIT license
 Param(
-	# Get the Bing image of this country
-	# Possible values: "United States", "United Kingdom", "New Zealand", "Japan", "China", "Australia"
-	[string]$country = "United States",
+    # Get the Bing image of this country
+    [ValidateSet('en-US', 'de-DE', 'en-AU', 'en-CA', 'en-NZ', 'en-UK', 'ja-JP', 'zh-CN')][string]$locale = 'en-US',
 
-	# Download the latest $files wallpapers
-	[int]$files = 3,
+    # Download the latest $files wallpapers
+    [int]$files = 3,
 
-	# Destination folder to download the wallpapers to
-	[string]$downloadFolder = "$([Environment]::GetFolderPath("MyPictures"))\Wallpapers",
+    # Resolution of the image to download
+    [ValidateSet('auto', '1366x768', '1920x1080')][string]$resolution = 'auto',
 
-	# Feed name
-	[string]$feedName = "Bing Images"
+    # Destination folder to download the wallpapers to
+    [string]$downloadFolder = "$([Environment]::GetFolderPath("MyPictures"))\Wallpapers"
 )
-# Feed URL
-$feedUrl = "http://feeds.feedburner.com/bingimages"
-# Max item count: download at least 60 feed items
-$maxItemCount = [System.Math]::max($files * 6, 60)
+# Max item count: the number of images we'll query for
+[int]$maxItemCount = [System.Math]::max(1, [System.Math]::max($files, 8))
+# URI to fetch the image locations from
+[string]$hostname = "https://www.bing.com"
+[string]$uri = "$hostname/HPImageArchive.aspx?format=xml&idx=0&n=$maxItemCount&mkt=$locale"
 
-# Check if download folder exists
+# Get the appropiate screen resolution
+if ($resolution -eq 'auto') {
+    Add-Type -AssemblyName System.Windows.Forms
+    $primaryScreen = [System.Windows.Forms.Screen]::AllScreens | Where-Object {$_.Primary -eq 'True'}
+    if ($primaryScreen.Bounds.Width -le 1366) {
+        $resolution = '1366x768'
+    } else {
+        $resolution = '1920x1080'
+    }
+}
+
+# Check if download folder exists and otherwise create it
 if (!(Test-Path $downloadFolder)) {
-	New-Item -ItemType Directory $downloadFolder
+    New-Item -ItemType Directory $downloadFolder
 }
 
-$fm = New-Object -ComObject "Microsoft.FeedsManager"
-# Check if the feed exists; add feed if non-existing
-if ($fm.RootFolder.ExistsFeed($feedName)) {
-	$feed = $fm.RootFolder.GetFeed($feedName)
-} else {
-	$feed = $fm.RootFolder.CreateFeed($feedName, $feedUrl)
-	$feed.DownloadEnclosuresAutomatically = $false
+$request = Invoke-WebRequest -Uri $uri
+[xml]$content = $request.Content
+
+$items = New-Object System.Collections.ArrayList
+foreach ($xmlImage in $content.images.image) {
+    [datetime]$imageDate = [datetime]::ParseExact($xmlImage.startdate, 'yyyyMMdd', $null)
+    [string]$imageUrl = "$hostname$($xmlImage.urlBase)_$resolution.jpg"
+
+    # Add item to our array list
+    $item = New-Object System.Object
+    $item | Add-Member -Type NoteProperty -Name date -Value $imageDate
+    $item | Add-Member -Type NoteProperty -Name url -Value $imageUrl
+    $null = $items.Add($item)
 }
 
-# Only update the feed if we haven't updated it in half a day or the maxItemCount has increased
-if (($feed.LastDownloadTime.AddHours(12).CompareTo([System.DateTime]::Now) -le 0) -or ($feed.MaxItemCount -lt $maxItemCount)) {
-	Write-Host "Updating feed..."
-	$feed.MaxItemCount = $maxItemCount
-	$feed.Download()
+# Keep only the most recent $files items to download
+if (!($files -eq 0) -and ($items.Count -gt $files)) {
+    # We have too many matches, keep only the most recent
+    $items = $items|Sort date
+    while ($items.Count -gt $files) {
+        # Pop the oldest item of the array
+        $null, $items = $items
+    }
 }
 
-# Add the items we want to a list
-$itemMatches = New-Object System.Collections.ArrayList
-foreach ($item in $feed.Items) {
-	$title = $item.Title
-	$url = $item.Enclosure.Url
-	if ($url -and $title -Match $country) {
-		# We've found a match but we're not sure if the wallpaper is recent enough
-		$null = $itemMatches.Add($item)
-	}
-}
-
-# Keep only the most recent $files items in our list
-if (!($files -eq 0) -and ($itemMatches.Count -gt $files)) {
-	# We have too many matches, keep only the most recent
-	$itemMatches = $itemMatches|Sort PubDate
-	while ($itemMatches.Count -gt $files) {
-		# Pop the oldest item of the array
-		$null, $itemMatches = $itemMatches
-	}
-}
-
-Write-Host "Downloading enclosures..."
+Write-Host "Downloading images..."
 $client = New-Object System.Net.WebClient
-foreach ($item in $itemMatches) {
-	$baseName = $item.Modified.ToString("yyyy-MM-dd")
-	$destination = "$downloadFolder\$baseName.jpg"
-	$url = $item.Enclosure.Url
+foreach ($item in $items) {
+    $baseName = $item.date.ToString("yyyy-MM-dd")
+    $destination = "$downloadFolder\$baseName.jpg"
+    $url = $item.url
 
-	# Download the enclosure if we haven't done so already
-	if (!(Test-Path $destination)) {
-		Write-Debug "Downloading enclosure to $destination"
-		$client.DownloadFile($url, "$destination")
-	}
+    # Download the enclosure if we haven't done so already
+    if (!(Test-Path $destination)) {
+        Write-Debug "Downloading image to $destination"
+        $client.DownloadFile($url, "$destination")
+    }
 }
 
 if ($files -gt 0) {
-	# We do not want to keep every file; remove the old ones
-	Write-Host "Cleaning the directory..."
-	$i = 1
-	Get-ChildItem -Filter "????-??-??.jpg" $downloadFolder | Sort -Descending FullName | ForEach-Object {
-		if ($i -gt $files) {
-			# We have more files than we want, delete the extra files
-			$fileName = $_.FullName
-			Write-Debug "Removing file $fileName"
-			Remove-Item "$fileName"
-		}
-		$i++
-	}
+    # We do not want to keep every file; remove the old ones
+    Write-Host "Cleaning the directory..."
+    $i = 1
+    Get-ChildItem -Filter "????-??-??.jpg" $downloadFolder | Sort -Descending FullName | ForEach-Object {
+        if ($i -gt $files) {
+            # We have more files than we want, delete the extra files
+            $fileName = $_.FullName
+            Write-Debug "Removing file $fileName"
+            Remove-Item "$fileName"
+        }
+        $i++
+    }
 }
