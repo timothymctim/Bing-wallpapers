@@ -37,7 +37,7 @@ behavior.
   If set to `'auto'` the script will try to determine which resolution
   is more appropriate based on your primary screen resolution.
 
-  **Possible values** `'auto'`, `1366x768'`, `'1920x1080'`
+  **Possible values** `'auto'`, `'1366x768'`, `'1920x1080'`
 
   **Default value** `'auto'`
 
