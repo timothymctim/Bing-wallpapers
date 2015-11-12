@@ -79,7 +79,7 @@ Run the program `powershell` with the arguments `-WindowStyle Hidden
 Changing your background settings
 ---------------------------------
 Go to `Settings` ⇨ `Personalization` ⇨ `Background` and select
-`Slideshow` as the `Background` type .
+`Slideshow` as the `Background` type.
 Hit the `Browse` button to select the folder you automatically download
 the images to (defaults to the folder `Wallpapers` inside your Pictures
 folder).
