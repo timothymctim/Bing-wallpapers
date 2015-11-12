@@ -12,7 +12,7 @@ Param(
     [int]$files = 3,
 
     # Resolution of the image to download
-    [ValidateSet('auto', '1366x768', '1920x1080')][string]$resolution = 'auto',
+    [ValidateSet('auto', '1024x768', '1280x720', '1366x768', '1920x1080')][string]$resolution = 'auto',
 
     # Destination folder to download the wallpapers to
     [string]$downloadFolder = "$([Environment]::GetFolderPath("MyPictures"))\Wallpapers"
@@ -27,7 +27,11 @@ Param(
 if ($resolution -eq 'auto') {
     Add-Type -AssemblyName System.Windows.Forms
     $primaryScreen = [System.Windows.Forms.Screen]::AllScreens | Where-Object {$_.Primary -eq 'True'}
-    if ($primaryScreen.Bounds.Width -le 1366) {
+    if ($primaryScreen.Bounds.Width -le 1024) {
+        $resolution = '1024x768'
+    } elseif ($primaryScreen.Bounds.Width -le 1280) {
+        $resolution = '1280x720'
+    } elseif ($primaryScreen.Bounds.Width -le 1366) {
         $resolution = '1366x768'
     } else {
         $resolution = '1920x1080'
