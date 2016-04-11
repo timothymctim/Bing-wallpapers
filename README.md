@@ -45,7 +45,7 @@ behavior.
 * `-downloadFolder` Destination folder to download the wallpapers to.
 
   **Default value**
-  `"$([Environment]::GetFolderPath("MyPictures"))\Wallpapers"`
+  `"$([Environment]::GetFolderPath("MyPictures"))\BingWallpapers"`
   (the subfolder `Wallpapers` inside your default Pictures folder)
 
   **Remarks** The folder will automatically be created if it doesn't

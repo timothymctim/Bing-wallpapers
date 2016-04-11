@@ -15,9 +15,8 @@ Param(
     [ValidateSet('auto', '1024x768', '1280x720', '1366x768', '1920x1080')][string]$resolution = 'auto',
 
     # Destination folder to download the wallpapers to
- ####### comentado por robe   [string]$downloadFolder = "$([Environment]::GetFolderPath("MyPictures"))\Wallpapers"
-    [string]$downloadFolder = "e:\temp\bingImage",
-    
+    [string]$downloadFolder = "$([Environment]::GetFolderPath("MyPictures"))\BingWallpapers",
+      
     # Proxy
     [string] $proxy=""
 )
