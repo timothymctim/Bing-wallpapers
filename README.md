@@ -45,11 +45,22 @@ behavior.
 * `-downloadFolder` Destination folder to download the wallpapers to.
 
   **Default value**
-  `"$([Environment]::GetFolderPath("MyPictures"))\Wallpapers"`
-  (the subfolder `Wallpapers` inside your default Pictures folder)
+  `"$([Environment]::GetFolderPath("MyPictures"))\BingWallpapers"`
+  (the subfolder `BingWallpapers` inside your default Pictures folder)
 
   **Remarks** The folder will automatically be created if it doesn't
   exists already.
+
+* `-proxy` proxy address.
+
+  **Default value** `'white space'`
+  
+
+Example  
+--------
+
+ps:> .\bing-wallpapers.ps1 -proxy "http://10.10.2.3:2020"  
+    
 
 Set as your wallpaper
 =====================

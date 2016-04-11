@@ -15,7 +15,10 @@ Param(
     [ValidateSet('auto', '1024x768', '1280x720', '1366x768', '1920x1080')][string]$resolution = 'auto',
 
     # Destination folder to download the wallpapers to
-    [string]$downloadFolder = "$([Environment]::GetFolderPath("MyPictures"))\Wallpapers"
+    [string]$downloadFolder = "$([Environment]::GetFolderPath("MyPictures"))\BingWallpapers",
+      
+    # Proxy
+    [string] $proxy=""
 )
 # Max item count: the number of images we'll query for
 [int]$maxItemCount = [System.Math]::max(1, [System.Math]::max($files, 8))
@@ -43,7 +46,10 @@ if (!(Test-Path $downloadFolder)) {
     New-Item -ItemType Directory $downloadFolder
 }
 
-$request = Invoke-WebRequest -Uri $uri
+
+if($proxy -eq "") {$request = Invoke-WebRequest -Uri $uri}
+else {$request = Invoke-WebRequest -Uri $uri -Proxy $proxy -ProxyUseDefaultCredentials}
+ 
 [xml]$content = $request.Content
 
 $items = New-Object System.Collections.ArrayList
