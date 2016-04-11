@@ -51,6 +51,11 @@ behavior.
   **Remarks** The folder will automatically be created if it doesn't
   exists already.
 
+* `-proxy` proxy address.
+
+  **Default value** `'white space'`
+    
+
 Set as your wallpaper
 =====================
 With a few additional steps you're able to automatically download the
