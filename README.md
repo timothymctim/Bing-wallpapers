@@ -57,7 +57,7 @@ behavior.
   
 
 Example  
-=========
+--------
 
 ps:> .\bing-wallpapers.ps1 -proxy "http://10.10.2.3:2020"  
     
