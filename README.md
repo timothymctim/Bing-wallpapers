@@ -46,7 +46,7 @@ behavior.
 
   **Default value**
   `"$([Environment]::GetFolderPath("MyPictures"))\BingWallpapers"`
-  (the subfolder `Wallpapers` inside your default Pictures folder)
+  (the subfolder `BingWallpapers` inside your default Pictures folder)
 
   **Remarks** The folder will automatically be created if it doesn't
   exists already.
