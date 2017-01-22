@@ -48,12 +48,12 @@ behavior.
   `"$([Environment]::GetFolderPath("MyPictures"))\Wallpapers"`
   (the subfolder `Wallpapers` inside your default Pictures folder)
 
-  **Remarks** The folder will automatically be created if it doesn't
-  exists already.
+  **Remarks** The folder will automatically be created if it doesn’t
+  exist already.
 
 Set as your wallpaper
 =====================
-With a few additional steps you're able to automatically download the
+With a few additional steps you’re able to automatically download the
 latest images and set them as your wallpaper.
 
 Automatically run the script
@@ -66,9 +66,9 @@ Additionally, you might need to unblock the file since you downloaded
 the file from an untrusted source on the Internet.
 You can do this by running `Unblock-File <path to the script>` as
 administrator.
-Note that the script itself doesn't need to be run as administrator!
+Note that the script itself doesn’t need to be run as administrator!
 
-You can configure to run the script periodically using 'Task Scheduler'.
+You can configure to run the script periodically using “Task Scheduler.”
 Open Task Scheduler and click `Action` ⇨ `Create Task…`.
 Enter a name and description that you like.
 Next, add a trigger to run the task once a day.
@@ -81,5 +81,5 @@ Changing your background settings
 Go to `Settings` ⇨ `Personalization` ⇨ `Background` and select
 `Slideshow` as the `Background` type.
 Hit the `Browse` button to select the folder you automatically download
-the images to (defaults to the folder `Wallpapers` inside your Pictures
-folder).
+the images to (the default is the folder `Wallpapers` inside your
+Pictures folder).
