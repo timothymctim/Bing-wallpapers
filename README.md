@@ -38,7 +38,7 @@ behavior.
   is more appropriate based on your primary screen resolution.
 
   **Possible values** `'auto'`, `'1024x768'`, `'1280x720'`,
-  `'1366x768'`, `'1920x1080'`
+  `'1366x768'`, `'1920x1080'`, `'1920x1200'`
 
   **Default value** `'auto'`
 

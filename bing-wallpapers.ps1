@@ -33,8 +33,10 @@ if ($resolution -eq 'auto') {
         $resolution = '1280x720'
     } elseif ($primaryScreen.Bounds.Width -le 1366) {
         $resolution = '1366x768'
-    } else {
+    } elseif ($primaryScreen.Bounds.Height -le 1080) {
         $resolution = '1920x1080'
+    } else {
+        $resolution = '1920x1200'
     }
 }
 
