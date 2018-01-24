@@ -15,7 +15,7 @@ install).
 
 Script options
 --------------
-The script supports several option which allows you to customize its
+The script supports several options which allows you to customize the
 behavior.
 
 * `-locale` Get the Bing image of the day for this area.
