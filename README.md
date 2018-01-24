@@ -20,10 +20,10 @@ behavior.
 
 * `-locale` Get the Bing image of the day for this area.
 
-  **Possible values** `'de-DE'`, `'en-AU'`, `'en-CA'`, `'en-NZ'`,
-  `'en-UK'`, `'en-US'`, `'ja-JP'`, `'zh-CN'`
+  **Possible values** `de-DE`, `en-AU`, `en-CA`, `en-NZ`,
+  `en-UK`, `en-US`, `ja-JP`, `zh-CN`
 
-  **Default value** `'en-US'`
+  **Default value** `en-US`
 
 * `-files` Keep only this number of images in the folder, *any other
   file matching* `????-??-??.jpg` *will be* **removed**!
@@ -34,13 +34,13 @@ behavior.
   not remove any file.
 
 * `-resolution` Determines which image resolution will be downloaded.
-  If set to `'auto'` the script will try to determine which resolution
-  is more appropriate based on your primary screen resolution.
+  If set to `auto` the script will try to determine which resolution
+  is more appropriate based on your primary screen resolution (Note: this does not work in Windows 10).
 
-  **Possible values** `'auto'`, `'1024x768'`, `'1280x720'`,
-  `'1366x768'`, `'1920x1080'`, `'1920x1200'`
+  **Possible values** `auto`, `1024x768`, `1280x720`,
+  `1366x768`, `1920x1080`, `1920x1200`
 
-  **Default value** `'auto'`
+  **Default value** `auto`
 
 * `-downloadFolder` Destination folder to download the wallpapers to.
 
