@@ -15,7 +15,7 @@ install).
 
 Script options
 --------------
-The script supports several option which allows you to customize its
+The script supports several options which allows you to customize the
 behavior.
 
 * `-locale` Get the Bing image of the day for this area.
@@ -35,12 +35,13 @@ behavior.
 
 * `-resolution` Determines which image resolution will be downloaded.
   If set to `auto` the script will try to determine which resolution
-  is more appropriate based on your primary screen resolution (Note: this does not work in Windows 10).
+  is more appropriate based on your primary screen resolution.
+  **(Note: the auto option does not work in Windows 10)**
 
   **Possible values** `auto`, `1024x768`, `1280x720`,
   `1366x768`, `1920x1080`, `1920x1200`
 
-  **Default value** `auto`
+  **Default value** `auto` (needs to be set manually for windows 10 devices)
 
 * `-downloadFolder` Destination folder to download the wallpapers to.
 
