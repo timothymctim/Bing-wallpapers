@@ -24,6 +24,7 @@ Param(
 [string]$uri = "$hostname/HPImageArchive.aspx?format=xml&idx=0&n=$maxItemCount&mkt=$locale"
 
 # Get the appropiate screen resolution
+# (Doesn't work in Windows 10 for some reason)
 if ($resolution -eq 'auto') {
     Add-Type -AssemblyName System.Windows.Forms
     $primaryScreen = [System.Windows.Forms.Screen]::AllScreens | Where-Object {$_.Primary -eq 'True'}
