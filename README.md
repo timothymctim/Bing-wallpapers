@@ -18,12 +18,30 @@ Script options
 The script supports several options which allows you to customize the
 behavior.
 
-* `-locale` Get the Bing image of the day for this area.
+* `-locale` Get the Bing image of the day for this
+  [region](https://msdn.microsoft.com/en-us/library/dd251064.aspx).
 
-  **Possible values** `'de-DE'`, `'en-AU'`, `'en-CA'`, `'en-NZ'`,
-  `'en-UK'`, `'en-US'`, `'ja-JP'`, `'zh-CN'`
+  **Possible values** `'auto'`, `'ar-XA'`, `'bg-BG'`, `'cs-CZ'`,
+  `'da-DK'`, `'de-AT'`, `'de-CH'`, `'de-DE'`, `'el-GR'`, `'en-AU'`,
+  `'en-CA'`, `'en-GB'`, `'en-ID'`, `'en-IE'`, `'en-IN'`, `'en-MY'`,
+  `'en-NZ'`, `'en-PH'`, `'en-SG'`, `'en-US'`, `'en-XA'`, `'en-ZA'`,
+  `'es-AR'`, `'es-CL'`, `'es-ES'`, `'es-MX'`, `'es-US'`, `'es-XL'`,
+  `'et-EE'`, `'fi-FI'`, `'fr-BE'`, `'fr-CA'`, `'fr-CH'`, `'fr-FR'`,
+  `'he-IL'`, `'hr-HR'`, `'hu-HU'`, `'it-IT'`, `'ja-JP'`, `'ko-KR'`,
+  `'lt-LT'`, `'lv-LV'`, `'nb-NO'`, `'nl-BE'`, `'nl-NL'`, `'pl-PL'`,
+  `'pt-BR'`, `'pt-PT'`, `'ro-RO'`, `'ru-RU'`, `'sk-SK'`, `'sl-SL'`,
+  `'sv-SE'`, `'th-TH'`, `'tr-TR'`, `'uk-UA'`, `'zh-CN'`, `'zh-HK'`,
+  `'zh-TW'`
 
-  **Default value** `'en-US'`
+  **Default value** `'auto'`
+
+  **Remarks** By using the value `'auto'`, Bing will attempt to
+  determine an applicable locale based on your IP address.
+  
+  Currently, only the values `'de-DE'`, `'en-AU'`, `'en-CA'`, `'en-GB'`,
+  `'en-IN'`, `'en-US'`, `'fr-CA'`, `'fr-FR'`, `'ja-JP'`, and `'zh-CN'`
+  will have their own localized version. Other values will be considered
+  as the “Rest of the World” by Bing.
 
 * `-files` Keep only this number of images in the folder, *any other
   file matching* `????-??-??.jpg` *will be* **removed**!

@@ -6,13 +6,22 @@
 # License: MIT license
 Param(
     # Get the Bing image of this country
-    [ValidateSet('en-US', 'de-DE', 'en-AU', 'en-CA', 'en-NZ', 'en-UK', 'ja-JP', 'zh-CN')][string]$locale = 'en-US',
+    [ValidateSet('auto', 'ar-XA', 'bg-BG', 'cs-CZ', 'da-DK', 'de-AT',
+    'de-CH', 'de-DE', 'el-GR', 'en-AU', 'en-CA', 'en-GB', 'en-ID',
+    'en-IE', 'en-IN', 'en-MY', 'en-NZ', 'en-PH', 'en-SG', 'en-US',
+    'en-XA', 'en-ZA', 'es-AR', 'es-CL', 'es-ES', 'es-MX', 'es-US',
+    'es-XL', 'et-EE', 'fi-FI', 'fr-BE', 'fr-CA', 'fr-CH', 'fr-FR',
+    'he-IL', 'hr-HR', 'hu-HU', 'it-IT', 'ja-JP', 'ko-KR', 'lt-LT',
+    'lv-LV', 'nb-NO', 'nl-BE', 'nl-NL', 'pl-PL', 'pt-BR', 'pt-PT',
+    'ro-RO', 'ru-RU', 'sk-SK', 'sl-SL', 'sv-SE', 'th-TH', 'tr-TR',
+    'uk-UA', 'zh-CN', 'zh-HK', 'zh-TW')][string]$locale = 'auto',
 
     # Download the latest $files wallpapers
     [int]$files = 3,
 
     # Resolution of the image to download
-    [ValidateSet('auto', '1024x768', '1280x720', '1366x768', '1920x1080', '1920x1200')][string]$resolution = 'auto',
+    [ValidateSet('auto', '1024x768', '1280x720', '1366x768',
+    '1920x1080', '1920x1200')][string]$resolution = 'auto',
 
     # Destination folder to download the wallpapers to
     [string]$downloadFolder = "$([Environment]::GetFolderPath("MyPictures"))\Wallpapers"
@@ -20,8 +29,13 @@ Param(
 # Max item count: the number of images we'll query for
 [int]$maxItemCount = [System.Math]::max(1, [System.Math]::max($files, 8))
 # URI to fetch the image locations from
+if ($locale -eq 'auto') {
+    $market = ""
+} else {
+    $market = "&mkt=$locale"
+}
 [string]$hostname = "https://www.bing.com"
-[string]$uri = "$hostname/HPImageArchive.aspx?format=xml&idx=0&n=$maxItemCount&mkt=$locale"
+[string]$uri = "$hostname/HPImageArchive.aspx?format=xml&idx=0&n=$maxItemCount$market"
 
 # Get the appropiate screen resolution
 if ($resolution -eq 'auto') {
