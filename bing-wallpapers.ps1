@@ -20,8 +20,9 @@ Param(
     [int]$files = 3,
 
     # Resolution of the image to download
-    [ValidateSet('auto', '1024x768', '1280x720', '1366x768',
-    '1920x1080', '1920x1200')][string]$resolution = 'auto',
+    [ValidateSet('auto', '800x600', '1024x768', '1280x720', '1280x768',
+    '1366x768', '1920x1080', '1920x1200', '720x1280', '768x1024',
+    '768x1280', '768x1366', '1080x1920')][string]$resolution = 'auto',
 
     # Destination folder to download the wallpapers to
     [string]$downloadFolder = "$([Environment]::GetFolderPath("MyPictures"))\Wallpapers"

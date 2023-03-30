@@ -37,7 +37,7 @@ behavior.
 
   **Remarks** By using the value `'auto'`, Bing will attempt to
   determine an applicable locale based on your IP address.
-  
+
   Currently, only the values `'de-DE'`, `'en-AU'`, `'en-CA'`, `'en-GB'`,
   `'en-IN'`, `'en-US'`, `'fr-CA'`, `'fr-FR'`, `'ja-JP'`, and `'zh-CN'`
   will have their own localized version. Other values will be considered
@@ -55,8 +55,9 @@ behavior.
   If set to `'auto'` the script will try to determine which resolution
   is more appropriate based on your primary screen resolution.
 
-  **Possible values** `'auto'`, `'1024x768'`, `'1280x720'`,
-  `'1366x768'`, `'1920x1080'`, `'1920x1200'`
+  **Possible values** `'auto'`, `'800x600'`, `'1024x768'`, `'1280x720'`,
+  `'1280x768'`, `'1366x768'`, `'1920x1080'`, `'1920x1200'`, `'720x1280'`,
+  `'768x1024'`, `'768x1280'`, `'768x1366'`, `'1080x1920'`
 
   **Default value** `'auto'`
 
