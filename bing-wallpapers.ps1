@@ -17,7 +17,7 @@ Param(
         'uk-UA', 'zh-CN', 'zh-HK', 'zh-TW')][string]$locale = 'auto',
 
     # Download the latest $files wallpapers.
-    [ValidateRange(0, 15)]
+    [ValidateRange("Positive")]
     [int]$files = 3,
 
     # Keep existing files
@@ -29,7 +29,10 @@ Param(
         '768x1280', '768x1366', '1080x1920')][string]$resolution = 'auto',
 
     # Destination folder to download the wallpapers to
-    [string]$downloadFolder = $(Join-Path $([Environment]::GetFolderPath("MyPictures")) "Wallpapers")
+    [string]$downloadFolder = $(Join-Path $([Environment]::GetFolderPath("MyPictures")) "Wallpapers"),
+
+    # Use alternative API with > 500 images
+    [switch]$useJsonSource
 )
 # Max item count: the number of images we'll query for
 # [int]$maxItemCount = [System.Math]::max(1, [System.Math]::max($files, 8))
@@ -79,24 +82,11 @@ if (!(Test-Path $downloadFolder)) {
 $pageSize = 8
 $items = New-Object System.Collections.ArrayList
 if ($files -gt 0) {
-    $pageAndRemainder = [System.Math]::DivRem($files, $pageSize)
-    # To support remainder logic vs 0 offset pages
-    if (($pageAndRemainder.item2 -eq 0) -and ($pagesAndRemainder.item1 -ne 0)) {
-        $pages = $pageAndRemainder.Item1 - 1
-    }
-    else {
-        $pages = $pageAndRemainder.item1
-    }
-    for ($i = 0; $i -le $pages; $i++) {
-        if ($pages -eq $i) { $pageItems = $pageAndRemainder.Item2 } else { $pageItems = $pageSize }
-        [string]$pageUri = $uri + "&idx=$($i * $pageSize)&n=$pageItems"
-        $request = Invoke-WebRequest -Uri $pageUri -DisableKeepAlive -UserAgent 'parp-1.0'
-        [xml]$content = $request.Content
-        
-        foreach ($xmlImage in $content.images.image) {
-            [datetime]$imageDate = [datetime]::ParseExact($xmlImage.startdate, 'yyyyMMdd', $null)
-            [string]$imageUrl = "$hostname$($xmlImage.urlBase)_$resolution.jpg"
-        
+    if ($useJsonSource) {
+        $jsonImgs = ConvertFrom-Json -InputObject $(Invoke-WebRequest -Uri 'https://api45gabs.azurewebsites.net/api/sample/bingphotos')
+        for ($i = 0; $i -lt $files; $i++) {
+            [datetime]$imageDate = [datetime]::ParseExact($jsonImgs[$i].startdate, 'yyyyMMdd', $null)
+            [string]$imageUrl = "$hostname$($jsonImgs[$i].urlBase)_$resolution.jpg"
             # Add item to our array list
             $item = New-Object System.Object
             $item | Add-Member -Type NoteProperty -Name date -Value $imageDate
@@ -104,7 +94,37 @@ if ($files -gt 0) {
             $null = $items.Add($item)
         }
     }
+    else {
+        <# Action when all if and elseif conditions are false #>
+        if ($files -gt 15) { $files = 15; Write-Debug "Bing API supports a maximum of 15 images" }
+        $pageAndRemainder = [System.Math]::DivRem($files, $pageSize)
+        # To support remainder logic vs 0 offset pages
+        if (($pageAndRemainder.item2 -eq 0) -and ($pagesAndRemainder.item1 -ne 0)) {
+            $pages = $pageAndRemainder.Item1 - 1
+        }
+        else {
+            $pages = $pageAndRemainder.item1
+        }
+        for ($i = 0; $i -le $pages; $i++) {
+            if ($pages -eq $i) { $pageItems = $pageAndRemainder.Item2 } else { $pageItems = $pageSize }
+            [string]$pageUri = $uri + "&idx=$($i * $pageSize)&n=$pageItems"
+            $request = Invoke-WebRequest -Uri $pageUri -DisableKeepAlive -UserAgent 'parp-1.0'
+            [xml]$content = $request.Content
+            
+            foreach ($xmlImage in $content.images.image) {
+                [datetime]$imageDate = [datetime]::ParseExact($xmlImage.startdate, 'yyyyMMdd', $null)
+                [string]$imageUrl = "$hostname$($xmlImage.urlBase)_$resolution.jpg"
+                
+                # Add item to our array list
+                $item = New-Object System.Object
+                $item | Add-Member -Type NoteProperty -Name date -Value $imageDate
+                $item | Add-Member -Type NoteProperty -Name url -Value $imageUrl
+                $null = $items.Add($item)
+            }
+        }
+    }
 }
+
 $items = $items | Sort-Object -Property date -Unique
 Write-Host "Downloading images..."
 $client = New-Object System.Net.WebClient
