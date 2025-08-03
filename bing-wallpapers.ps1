@@ -6,23 +6,27 @@
 # License: MIT license
 Param(
     # Get the Bing image of this country
-    [ValidateSet('auto', 'ar-XA', 'bg-BG', 'cs-CZ', 'da-DK', 'de-AT',
-    'de-CH', 'de-DE', 'el-GR', 'en-AU', 'en-CA', 'en-GB', 'en-ID',
-    'en-IE', 'en-IN', 'en-MY', 'en-NZ', 'en-PH', 'en-SG', 'en-US',
-    'en-XA', 'en-ZA', 'es-AR', 'es-CL', 'es-ES', 'es-MX', 'es-US',
-    'es-XL', 'et-EE', 'fi-FI', 'fr-BE', 'fr-CA', 'fr-CH', 'fr-FR',
-    'he-IL', 'hr-HR', 'hu-HU', 'it-IT', 'ja-JP', 'ko-KR', 'lt-LT',
-    'lv-LV', 'nb-NO', 'nl-BE', 'nl-NL', 'pl-PL', 'pt-BR', 'pt-PT',
-    'ro-RO', 'ru-RU', 'sk-SK', 'sl-SL', 'sv-SE', 'th-TH', 'tr-TR',
-    'uk-UA', 'zh-CN', 'zh-HK', 'zh-TW')][string]$locale = 'auto',
+    [ValidateSet(
+        'auto', 'ar-XA', 'bg-BG', 'cs-CZ', 'da-DK', 'de-AT', 'de-CH',
+        'de-DE', 'el-GR', 'en-AU', 'en-CA', 'en-GB', 'en-ID', 'en-IE',
+        'en-IN', 'en-MY', 'en-NZ', 'en-PH', 'en-SG', 'en-US', 'en-XA',
+        'en-ZA', 'es-AR', 'es-CL', 'es-ES', 'es-MX', 'es-US', 'es-XL',
+        'et-EE', 'fi-FI', 'fr-BE', 'fr-CA', 'fr-CH', 'fr-FR', 'he-IL',
+        'hr-HR', 'hu-HU', 'it-IT', 'ja-JP', 'ko-KR', 'lt-LT', 'lv-LV',
+        'nb-NO', 'nl-BE', 'nl-NL', 'pl-PL', 'pt-BR', 'pt-PT', 'ro-RO',
+        'ru-RU', 'sk-SK', 'sl-SL', 'sv-SE', 'th-TH', 'tr-TR', 'uk-UA',
+        'zh-CN', 'zh-HK', 'zh-TW'
+    )][string]$locale = 'auto',
 
     # Download the latest $files wallpapers
     [int]$files = 3,
 
     # Resolution of the image to download
-    [ValidateSet('auto', '800x600', '1024x768', '1280x720', '1280x768',
-    '1366x768', '1920x1080', '1920x1200', '720x1280', '768x1024',
-    '768x1280', '768x1366', '1080x1920')][string]$resolution = 'auto',
+    [ValidateSet(
+        'auto', '800x600', '1024x768', '1280x720', '1280x768', '1366x768',
+        '1920x1080', '1920x1200', '720x1280', '768x1024', '768x1280',
+        '768x1366', '1080x1920'
+    )][string]$resolution = 'auto',
 
     # Destination folder to download the wallpapers to
     [string]$downloadFolder = "$([Environment]::GetFolderPath("MyPictures"))\Wallpapers"
@@ -32,7 +36,8 @@ Param(
 # URI to fetch the image locations from
 if ($locale -eq 'auto') {
     $market = ""
-} else {
+}
+else {
     $market = "&mkt=$locale"
 }
 [string]$hostname = "https://www.bing.com"
@@ -41,16 +46,20 @@ if ($locale -eq 'auto') {
 # Get the appropiate screen resolution
 if ($resolution -eq 'auto') {
     Add-Type -AssemblyName System.Windows.Forms
-    $primaryScreen = [System.Windows.Forms.Screen]::AllScreens | Where-Object {$_.Primary -eq 'True'}
+    $primaryScreen = [System.Windows.Forms.Screen]::AllScreens | Where-Object { $_.Primary -eq 'True' }
     if ($primaryScreen.Bounds.Width -le 1024) {
         $resolution = '1024x768'
-    } elseif ($primaryScreen.Bounds.Width -le 1280) {
+    }
+    elseif ($primaryScreen.Bounds.Width -le 1280) {
         $resolution = '1280x720'
-    } elseif ($primaryScreen.Bounds.Width -le 1366) {
+    }
+    elseif ($primaryScreen.Bounds.Width -le 1366) {
         $resolution = '1366x768'
-    } elseif ($primaryScreen.Bounds.Height -le 1080) {
+    }
+    elseif ($primaryScreen.Bounds.Height -le 1080) {
         $resolution = '1920x1080'
-    } else {
+    }
+    else {
         $resolution = '1920x1200'
     }
 }
@@ -78,7 +87,7 @@ foreach ($xmlImage in $content.images.image) {
 # Keep only the most recent $files items to download
 if (!($files -eq 0) -and ($items.Count -gt $files)) {
     # We have too many matches, keep only the most recent
-    $items = $items|Sort date
+    $items = $items | Sort date
     while ($items.Count -gt $files) {
         # Pop the oldest item of the array
         $null, $items = $items
