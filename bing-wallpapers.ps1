@@ -49,26 +49,43 @@ else {
 # Get the appropiate screen resolution
 if ($resolution -eq 'auto') {
     if ($PSVersionTable.OS.Contains('Windows')) {
+        $os = 'Windows'
         Add-Type -AssemblyName System.Windows.Forms
         $primaryScreen = [System.Windows.Forms.Screen]::AllScreens | Where-Object { $_.Primary -eq 'True' }
-        if ($primaryScreen.Bounds.Width -le 1024) {
-            $resolution = '1024x768'
-        }
-        elseif ($primaryScreen.Bounds.Width -le 1280) {
-            $resolution = '1280x720'
-        }
-        elseif ($primaryScreen.Bounds.Width -le 1366) {
-            $resolution = '1366x768'
-        }
-        elseif ($primaryScreen.Bounds.Height -le 1080) {
-            $resolution = '1920x1080'
-        }
-        else {
-            $resolution = '1920x1200'
+        $width = $primaryScreen.Bounds.Width
+        $height = $primaryScreen.Bounds.Height
+    }
+    elseif ($PSVersionTable.OS.Contains('Darwin')) {
+        $os = 'MacOS'
+        system_profiler SPDisplaysDataType -json | ConvertFrom-Json -OutVariable $displayInfo
+        foreach ($item in $displayInfo) {
+            if ($item[0].SPDisplaysDataType[0].spdisplays_ndrvs.spdisplays_main -eq 'spdisplays_yes') {
+                $width = $item[0].SPDisplaysDataType[0].spdisplays_ndrvs.spdisplays_resolution.split("@")[0].split('x')[0].Trim()
+                $height = $item[0].SPDisplaysDataType[0].spdisplays_ndrvs.spdisplays_resolution.split("@")[0].split('x')[1].Trim()
+            }
         }
     }
     else {
+        # Default for Linux
+        $width = 1920
+        $height = 1080
+    }
+
+    # Determine the resolution to download based on width and height
+    if ($width -le 1024) {
+        $resolution = '1024x768'
+    }
+    elseif ($width -le 1280) {
+        $resolution = '1280x720'
+    }
+    elseif ($width -le 1366) {
+        $resolution = '1366x768'
+    }
+    elseif ($height -le 1080) {
         $resolution = '1920x1080'
+    }
+    else {
+        $resolution = '1920x1200'
     }
 }
 
