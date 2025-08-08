@@ -49,19 +49,19 @@ else {
 # Get the appropiate screen resolution
 if ($resolution -eq 'auto') {
     if ($PSVersionTable.OS.Contains('Windows')) {
-        $os = 'Windows'
+        Write-Verbose 'On Windows'
         Add-Type -AssemblyName System.Windows.Forms
         $primaryScreen = [System.Windows.Forms.Screen]::AllScreens | Where-Object { $_.Primary -eq 'True' }
         $width = $primaryScreen.Bounds.Width
         $height = $primaryScreen.Bounds.Height
     }
     elseif ($PSVersionTable.OS.Contains('Darwin')) {
-        $os = 'MacOS'
-        system_profiler SPDisplaysDataType -json | ConvertFrom-Json -OutVariable $displayInfo
+        Write-Verbose 'On MacOS'
+        $null = system_profiler SPDisplaysDataType -json | ConvertFrom-Json -OutVariable displayInfo
         foreach ($item in $displayInfo) {
             if ($item[0].SPDisplaysDataType[0].spdisplays_ndrvs.spdisplays_main -eq 'spdisplays_yes') {
-                $width = $item[0].SPDisplaysDataType[0].spdisplays_ndrvs.spdisplays_resolution.split("@")[0].split('x')[0].Trim()
-                $height = $item[0].SPDisplaysDataType[0].spdisplays_ndrvs.spdisplays_resolution.split("@")[0].split('x')[1].Trim()
+                [int]$width = $item[0].SPDisplaysDataType[0].spdisplays_ndrvs.spdisplays_resolution.split("@")[0].split('x')[0].Trim()
+                [int]$height = $item[0].SPDisplaysDataType[0].spdisplays_ndrvs.spdisplays_resolution.split("@")[0].split('x')[1].Trim()
             }
         }
     }
