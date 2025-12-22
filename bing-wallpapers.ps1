@@ -60,8 +60,8 @@ if ($resolution -eq 'auto') {
     elseif ($primaryScreen.Bounds.Height -le 1080) {
         $resolution = '1920x1080'
     }
-    elseif ($primaryScreen.Bounds.Height -le 2160) {
-        $resolution = 'UHD'
+    elseif ($primaryScreen.Bounds.Width -le 1920) {
+        $resolution = '1920x1080'
     }
     else {
         $resolution = 'UHD'
